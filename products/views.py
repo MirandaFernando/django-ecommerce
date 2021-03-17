@@ -1,16 +1,10 @@
 from django.shortcuts import render
 
-from django.views.generic import ListView
-from django.shortcuts import render
+from django.views.generic import ListView, DetailView
+from django.shortcuts import render, get_object_or_404
 
 from .models import Product
 
-class ProductListView(ListView):
-    #traz todos os produtos do banco de dados sem filtrar nada 
-    queryset = Product.objects.all()
-    template_name = "products/list.html"
-    
-    
 
 def product_list_view(request):
     queryset = Product.objects.all()
@@ -18,3 +12,13 @@ def product_list_view(request):
         'object_list': queryset
     }
     return render(request, "products/list.html", context)
+
+#Class Based View
+
+def product_detail_view(request, pk = None, *args, **kwargs):
+    instance = Product.objects.get(pk = pk) #get the object id
+    instance = get_object_or_404(Product, pk = pk)
+    context = {
+        'object': instance
+    }
+    return render(request, "products/detail.html", context)
